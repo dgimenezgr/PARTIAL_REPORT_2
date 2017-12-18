@@ -1,0 +1,90 @@
+```{python, results='asis'}
+import knitpy
+import scipy
+import numpy
+import pandas as pd
+from sklearn.decomposition import PCA
+from sklearn.decomposition import FastICA
+from sklearn.decomposition import FactorAnalysis
+from sklearn.feature_selection import RFE
+from sklearn.linear_model import LogisticRegression
+from sklearn.manifold import TSNE
+from sklearn import svm
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import cohen_kappa_score
+from sklearn.metrics import confusion_matrix
+
+#Sacar a df los predictores
+data_pydf_predictor_ids = range(7,2874)
+data_pydf_predictors = pd.read_csv('data/data.csv', usecols=data_pydf_predictor_ids)
+data_pydf_predictors = data_pydf_predictors.values
+
+#Sacar a df las respuestas
+data_pydf_responses = pd.read_csv('data/data.csv', usecols=['tipoCelula'])
+data_pydf_responses = data_pydf_responses.values
+
+#PCA
+#Configurar modelo PCA
+data_pca_py = PCA(n_components=210,copy=True)
+
+#Ajustar PCA con predictores
+data_pca_py_fit = data_pca_py.fit(data_pydf_predictors)
+
+#Transformar el df de predictores con los 210 componentes principales
+data_pca_py_transf = data_pca_py_fit.transform(data_pydf_predictors)
+
+#Hacer subset de predictores transformados de training y de test
+data_pca_predictors_train, data_pca_predictors_test, data_pca_responses_train, data_pca_responses_test = train_test_split(data_pca_py_transf, data_pydf_responses, train_size = 0.66, random_state=123)
+
+#Aplicar SVM
+data_pca_py_svm = svm.SVC(kernel='rbf')
+
+#Ajustar SVM
+data_pca_py_svm_fit = data_pca_py_svm.fit(data_pca_predictors_train, data_pca_responses_train.ravel()).predict(data_pca_predictors_test)
+
+#Sacar matriz de confusion para los resultados contra lo esperado
+confusion_matrix(data_pydf_test_responses.ravel(),data_pca_py_svm_fit)
+
+#Comparar clases predichas a clases observadas
+cohen_kappa_score(data_pydf_test_responses.ravel(),data_pca_py_svm_fit)
+
+#ICA
+#Configurar modelo ICA
+data_ica_py = FastICA(n_components=210)
+
+#Ajustar ICA con predictores
+data_ica_py_fit = data_ica_py.fit(data_pydf_predictors)
+
+#Transformar el df de predictores con los 20 componentes principales
+data_ica_py_transf = data_ica_py_fit.transform(data_pydf_predictors)
+
+#Hacer subset de predictores transformados de training y de test
+data_ica_predictors_train, data_ica_predictors_test, data_ica_responses_train, data_ica_responses_test = train_test_split(data_ica_py_transf, data_pydf_responses, train_size = 0.66, random_state=123)
+
+#Aplicar SVM
+data_ica_py_svm = svm.SVC(kernel='rbf')
+
+#Ajustar SVM
+data_ica_py_svm_fit = data_ica_py_svm.fit(data_ica_predictors_train, data_ica_responses_train.ravel()).predict(data_ica_predictors_test)
+
+#Sacar matriz de confusion para los resultados contra lo esperado
+confusion_matrix(data_pydf_test_responses.ravel(),data_ica_py_svm_fit)
+
+#Comparar clases predichas a clases observadas
+cohen_kappa_score(data_ica_predicted_classes, data_pydf_responses.values.ravel())
+
+#Factor Analysis
+data_factanal_py = FactorAnalysis(n_components=210)
+
+data_factanal_py_fit = data_factanal_py.fit(data_pydf_predictors)
+
+#TSNE
+data_tsne_py = TSNE(n_components=210)
+data_tsne_py_fit = data_tsne_py.fit(data_pydf_predictors)
+
+#RFE
+model = LogisticRegression()
+rfe = RFE(model, 210)
+rfe = rfe.fit(data_pydf_predictors,data_pydf_responses.values.ravel())
+```
+
