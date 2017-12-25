@@ -16,7 +16,7 @@ options:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, fig.lp = "Fig. ", tidy.opts=list(width.cutoff=60),tidy=TRUE, cache = TRUE, fig.width=12, fig.height=4, comment = NULL, out.height='200px', dpi=200, fig.pos = 'h', out.extra = '')
+knitr::opts_chunk$set(echo = TRUE, fig.lp = "Fig. ", tidy.opts=list(width.cutoff=60),tidy=TRUE, cache = TRUE, fig.width=12, fig.height=4, comment = NULL, out.height='200px', dpi=200, fig.pos = 'h', out.extra = '', engine.path = list(python = 'C:/Program Files (x86)/eMule/python/python.exe'))
 ```
 
 ```{r library_load, echo=FALSE, message=FALSE}
@@ -72,7 +72,7 @@ data_df_test_responses <- data_df_responses[-data_train_index]
 
 ```
 
-The current data set is a study on **normal**, **atypical**, and reactive lymphocytes, in which 2867 numerical variables, based on colorimetric and geometric features have been measured. The aim of the study is more thoroughly explained both in the proposal and main report for this project.  
+The current data set is a study on **normal**, **atypical**, and **variant** lymphocytes, in which 2867 numerical variables, based on colorimetric and geometric features have been measured. The aim of the study is more thoroughly explained both in the proposal and main report for this project.  
 
 The current data set has `r length(data_df[,1])` observations for `r length(data_df[1,])` variables, of which `r data_class_factors` (in which the response variable, *tipoCelula*, is included) are factors and `r data_class_numeric` are numeric predictor variables.   
 
@@ -99,7 +99,7 @@ for (i in seq(from = 10, to = 250, by = 10)) {
 
 This script aims to assess the comparative performances of different dimension reduction techniques. They will be measured for a common accuracy metric and judged by their processing performance. Being **PCA** the most used, most assessed technique, it will be used as a kind of touchstone in respect to requirements for the other techniques.  
 
-For the effects of this project, the benchmark number of variables is that which satisfies one condition, being this that the extracted features account for an accumulated 95% of variance in the reference dimensionality reduction technique, **PCA**. Having determined this, a continued test of cumulative numbers of extracted features, between a floor of 10 and an estimative limit of 250 yields the following result.  
+For the effects of this project, the benchmark amount of variables is that number which satisfies one condition, being this that the extracted features account for an accumulated 95% of variance in the reference dimensionality reduction technique, **PCA**. Having determined this, a continued test of cumulative numbers of extracted features, between a floor of 10 and an estimative limit of 250 yields the following result.  
 
 ```{r data_exfeat_message, include = FALSE, results='asis'}
 cat(varImpMessage)
